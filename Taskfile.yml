@@ -1,0 +1,118 @@
+# https://taskfile.dev
+
+version: '3'
+
+
+dotenv: ['.env']
+
+tasks:
+
+  showenv:
+    desc: Show environment variables
+    cmds:
+      - echo "Using registry $MICRO_REGISTRY"
+
+  build:mu:
+    deps:
+      - build:bin
+    desc: Build the mu tool
+    sources:
+      - tools/mu/*.go
+      - plugs/*.go
+    generates:
+      - bin/monomu
+    cmds:
+      - echo "Building the mu tool..."
+      - go build -o bin/monomu ./tools/mu
+
+  build:helloworld:
+    deps:
+      - build:bin
+    desc: Build the helloworld service
+    generates:
+      - bin/helloworld
+    sources:
+      - servcies/helloworld/*.go
+      - plugs/*.go
+    cmds:
+      - echo "Building the helloworld service..."
+      - go build -o bin/helloworld ./services/helloworld
+
+  build:bin:
+    desc: Build all binaries
+    generates:
+      - bin
+    cmds:
+      - mkdir -p bin
+    silent: true
+
+  build:all:
+
+    desc: Build all services
+    cmds:
+      - echo "Building all services..."
+      - task build:mu
+      - task build:helloworld
+    silent: true
+
+  build:clean:
+    desc: Clean up build artifacts
+    cmds:
+      - echo "Cleaning up build artifacts..."
+      - rm -rf bin/*
+      - echo "Build artifacts cleaned"
+
+  infra:up:
+    desc: Start infrastructure
+    cmds:
+      - echo "Starting infrastructure..."
+      - task etcd:start
+      - echo "Infrastructure started"
+
+  infra:down:
+    desc: Stop infrastructure
+    cmds:
+      - echo "Stopping infrastructure..."
+      - task etcd:stop
+      - echo "Infrastructure stopped"
+
+
+  etcd:start:
+    desc: Start etcd as a background task
+    cmds:
+      - echo "Starting etcd..."
+      - ./scripts/etcd-start.sh
+      - echo "etcd started"
+    silent: true
+
+  etcd:create:
+    desc: Create etcd container
+    cmds:
+      - echo "Creating etcd container..."
+      - ./scripts/etcd-create.sh
+      - echo "etcd container created"
+    silent: true
+
+  etcd:stop:
+    desc: Stop etcd
+    cmds:
+      - echo "Stopping etcd..."
+      - ./scripts/etcd-stop.sh
+      - echo "etcd stopped"
+    silent: true
+
+  run:helloworld:
+    deps:
+      - build:helloworld
+    desc: Run the helloworld service
+    cmds:
+      - echo "Running the helloworld service..."
+      - ./bin/helloworld
+
+  run:mu:
+    deps:
+      - build:mu
+    desc: Run the mu tool
+    cmds:
+      - ./bin/monomu services
+    silent: true
