@@ -30,6 +30,7 @@ var _ server.Option
 
 type SayService interface {
 	Hello(ctx context.Context, in *HelloRequest, opts ...client.CallOption) (*HelloResponse, error)
+	StrongHello(ctx context.Context, in *HelloRequest, opts ...client.CallOption) (*HelloResponse, error)
 }
 
 type sayService struct {
@@ -54,15 +55,27 @@ func (c *sayService) Hello(ctx context.Context, in *HelloRequest, opts ...client
 	return out, nil
 }
 
+func (c *sayService) StrongHello(ctx context.Context, in *HelloRequest, opts ...client.CallOption) (*HelloResponse, error) {
+	req := c.c.NewRequest(c.name, "Say.StrongHello", in)
+	out := new(HelloResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for Say service
 
 type SayHandler interface {
 	Hello(context.Context, *HelloRequest, *HelloResponse) error
+	StrongHello(context.Context, *HelloRequest, *HelloResponse) error
 }
 
 func RegisterSayHandler(s server.Server, hdlr SayHandler, opts ...server.HandlerOption) error {
 	type say interface {
 		Hello(ctx context.Context, in *HelloRequest, out *HelloResponse) error
+		StrongHello(ctx context.Context, in *HelloRequest, out *HelloResponse) error
 	}
 	type Say struct {
 		say
@@ -77,4 +90,8 @@ type sayHandler struct {
 
 func (h *sayHandler) Hello(ctx context.Context, in *HelloRequest, out *HelloResponse) error {
 	return h.SayHandler.Hello(ctx, in, out)
+}
+
+func (h *sayHandler) StrongHello(ctx context.Context, in *HelloRequest, out *HelloResponse) error {
+	return h.SayHandler.StrongHello(ctx, in, out)
 }

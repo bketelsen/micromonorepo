@@ -90,11 +90,13 @@ tasks:
 
   build:all:
 
-    desc: Build all services
+    desc: Build all binaries
     cmds:
-      - echo "Building all services..."
+      - echo "Building all binaries..."
       - task build:mu
       - task build:helloworld
+      - task build:stringsvc
+      - task build:helloworldclient
     silent: true
 
   build:clean:
@@ -150,6 +152,14 @@ tasks:
     cmds:
       - echo "Running the helloworld service..."
       - ./bin/helloworld
+
+  run:stringsvc:
+    deps:
+      - build:stringsvc
+    desc: Run the stringsvc service
+    cmds:
+      - echo "Running the stringsvc service..."
+      - ./bin/stringsvc
 
   run:helloworldclient:
     deps:

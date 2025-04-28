@@ -8,7 +8,9 @@ service Say {
 	rpc Hello(HelloRequest) returns (HelloResponse) {
 		option (google.api.http) = { post: "/hello"; body: "*"; };
 	}
-
+	rpc StrongHello(HelloRequest) returns (HelloResponse) {
+		option (google.api.http) = { post: "/stronghello"; body: "*"; };
+	}
 }
 
 message HelloRequest {

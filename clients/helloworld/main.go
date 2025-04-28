@@ -18,4 +18,10 @@ func main() {
 		panic(err)
 	}
 	println(resp.Msg)
+
+	resp, err = sayClient.StrongHello(context.Background(), &helloworld.HelloRequest{Name: "John"})
+	if err != nil {
+		panic(err)
+	}
+	println(resp.Msg)
 }
