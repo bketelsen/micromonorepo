@@ -3,17 +3,17 @@ package main
 import (
 	"context"
 
-	proto "github.com/micro/monorepo/protos"
+	proto "github.com/micro/monorepo/protos/hello"
 	"go-micro.dev/v5"
 )
 
 func main() {
-	service := micro.New("helloworld")
-	service.Init()
+	helloService := micro.New("helloworld")
+	helloService.Init()
 
-	client := proto.NewSayService("helloworld", service.Client())
+	sayClient := proto.NewSayService("helloworld", helloService.Client())
 
-	resp, err := client.Hello(context.Background(), &proto.HelloRequest{Name: "John"})
+	resp, err := sayClient.Hello(context.Background(), &proto.HelloRequest{Name: "John"})
 	if err != nil {
 		panic(err)
 	}
