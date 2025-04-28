@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 
-	proto "github.com/micro/monorepo/protos/hello"
+	proto "github.com/micro/monorepo/protos/helloworld"
 	"go-micro.dev/v5"
 )
 
