@@ -18,7 +18,7 @@ tasks:
     desc: Build the mu tool
     sources:
       - tools/mu/*.go
-      - plugs/*.go
+      - infra/*.go
     generates:
       - bin/monomu
     cmds:
@@ -33,7 +33,7 @@ tasks:
       - bin/helloworld
     sources:
       - servcies/helloworld/*.go
-      - plugs/*.go
+      - infra/*.go
     cmds:
       - echo "Building the helloworld service..."
       - go build -o bin/helloworld ./services/helloworld
