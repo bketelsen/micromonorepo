@@ -3,21 +3,14 @@ package main
 import (
 	"context"
 
+	proto "github.com/micro/monorepo/protos"
 	"go-micro.dev/v5"
 )
 
 type Say struct{}
 
-type Request struct {
-	Name string
-}
-
-type Response struct {
-	Message string
-}
-
-func (s *Say) Hello(ctx context.Context, req *Request, rsp *Response) error {
-	rsp.Message = "Hello " + req.Name
+func (s *Say) Hello(ctx context.Context, req *proto.HelloRequest, rsp *proto.HelloResponse) error {
+	rsp.Msg = "Hello " + req.Name
 	return nil
 }
 
@@ -26,7 +19,7 @@ func main() {
 	// create service
 	service := micro.New("helloworld")
 	// register handler
-	service.Handle(new(Say))
+	proto.RegisterSayHandler(service.Server(), &Say{})
 	// init service
 	service.Init()
 	// run service

@@ -12,6 +12,13 @@ tasks:
     cmds:
       - echo "Using registry $MICRO_REGISTRY"
 
+  buf:generate:
+    desc: Generate protobuf files
+    cmds:
+      - echo "Generating protobuf files..."
+      - buf generate
+      - echo "Protobuf files generated"
+
   build:mu:
     deps:
       - build:bin
@@ -28,15 +35,34 @@ tasks:
   build:helloworld:
     deps:
       - build:bin
+      - buf:generate
     desc: Build the helloworld service
     generates:
       - bin/helloworld
     sources:
+      - protos/*.proto
+      - protos/gen/*.go
       - servcies/helloworld/*.go
       - infra/*.go
     cmds:
       - echo "Building the helloworld service..."
       - go build -o bin/helloworld ./services/helloworld
+
+  build:helloworldclient:
+    deps:
+      - build:bin
+      - buf:generate
+    desc: Build the helloworld client
+    generates:
+      - bin/helloworldclient
+    sources:
+      - protos/*.proto
+      - protos/gen/*.go
+      - clients/helloworld/*.go
+      - infra/*.go
+    cmds:
+      - echo "Building the helloworld service..."
+      - go build -o bin/helloworldclient ./clients/helloworld
 
   build:bin:
     desc: Build all binaries
@@ -108,6 +134,14 @@ tasks:
     cmds:
       - echo "Running the helloworld service..."
       - ./bin/helloworld
+
+  run:helloworldclient:
+    deps:
+      - build:helloworldclient
+    desc: Run the helloworld client
+    cmds:
+      - echo "Running the helloworld client..."
+      - ./bin/helloworldclient
 
   run:mu:
     deps:
