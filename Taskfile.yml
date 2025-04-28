@@ -48,6 +48,22 @@ tasks:
       - echo "Building the helloworld service..."
       - go build -o bin/helloworld ./services/helloworld
 
+  build:stringsvc:
+    deps:
+      - build:bin
+      - buf:generate
+    desc: Build the string service
+    generates:
+      - bin/stringsvc
+    sources:
+      - protos/*.proto
+      - protos/gen/*.go
+      - services/stringsvc/*.go
+      - infra/*.go
+    cmds:
+      - echo "Building the stringsvc service..."
+      - go build -o bin/stringsvc ./services/stringsvc
+
   build:helloworldclient:
     deps:
       - build:bin

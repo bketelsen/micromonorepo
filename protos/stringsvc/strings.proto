@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option go_package = "../stringsvc";
+
+import "google/api/annotations.proto";
+
+service Tools {
+	rpc Upper(UpperRequest) returns (UpperResponse) {
+		option (google.api.http) = { post: "/upper"; body: "*"; };
+	}
+
+}
+
+message UpperRequest {
+	string value = 1;
+}
+
+message UpperResponse {
+	string value = 1;
+}
